@@ -1,0 +1,33 @@
+app-id: com.github.Anty0.tellodesk
+runtime: org.freedesktop.Platform
+runtime-version: '22.08'
+sdk: org.freedesktop.Sdk
+sdk-extensions:
+  - org.freedesktop.Sdk.Extension.golang
+command: tellodesk
+
+finish-args:
+  - --share=ipc # Share IPC namespace with the host (necessary for X11).
+  - --socket=x11
+  - --device=dri # OpenGL rendering support, not sure if needed.
+  - --socket=wayland # Wayland support, not sure if needed.
+
+build-options:
+  env:
+    - GOBIN=/app/bin
+    - GOROOT=/usr/lib/sdk/golang
+
+modules:
+  - shared-modules/gtk2/gtk2.json
+  - name: tellodesk
+    buildsystem: simple
+    build-options:
+      build-args:
+        - --share=network
+    build-commands:
+      - $GOROOT/bin/go mod download
+      - $GOROOT/bin/go build -trimpath -o tellodesk
+      - install -Dm00755 tellodesk $FLATPAK_DEST/bin/tellodesk
+    sources:
+      - type: git
+        url: "https://github.com/Anty0/tellodesk.git"
