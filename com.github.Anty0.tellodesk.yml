@@ -1,15 +1,18 @@
 app-id: com.github.Anty0.tellodesk
 runtime: org.freedesktop.Platform
 runtime-version: '22.08'
+runtime-extensions:
+  - org.freedesktop.Platform.ffmpeg-full
 sdk: org.freedesktop.Sdk
 sdk-extensions:
   - org.freedesktop.Sdk.Extension.golang
 command: tellodesk
 
 finish-args:
+  - --share=network
   - --share=ipc # Share IPC namespace with the host (necessary for X11).
   - --socket=x11
-  - --device=dri # OpenGL rendering support, not sure if needed.
+  - --device=all # Allow access to joysticks.
   - --socket=wayland # Wayland support, not sure if needed.
 
 build-options:
